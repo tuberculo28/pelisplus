@@ -1,6 +1,6 @@
 BEGIN TRANSACTION;
 DROP TABLE IF EXISTS "actor";
-CREATE TABLE IF NOT EXISTS "actor" (
+CREATE TABLE "actor" (
 	"actor_id"	numeric NOT NULL,
 	"first_name"	VARCHAR(45) NOT NULL,
 	"last_name"	VARCHAR(45) NOT NULL,
@@ -8,21 +8,21 @@ CREATE TABLE IF NOT EXISTS "actor" (
 	PRIMARY KEY("actor_id")
 );
 DROP TABLE IF EXISTS "language";
-CREATE TABLE IF NOT EXISTS "language" (
+CREATE TABLE  "language" (
 	"language_id"	SMALLINT NOT NULL,
 	"name"	CHAR(20) NOT NULL,
 	"last_update"	TIMESTAMP NOT NULL,
 	PRIMARY KEY("language_id")
 );
 DROP TABLE IF EXISTS "category";
-CREATE TABLE IF NOT EXISTS "category" (
+CREATE TABLE "category" (
 	"category_id"	SMALLINT NOT NULL,
 	"name"	VARCHAR(25) NOT NULL,
 	"last_update"	TIMESTAMP NOT NULL,
 	PRIMARY KEY("category_id")
 );
 DROP TABLE IF EXISTS "film";
-CREATE TABLE IF NOT EXISTS "film" (
+CREATE TABLE "film" (
 	"film_id"	int NOT NULL,
 	"title"	VARCHAR(255) NOT NULL,
 	"description"	BLOB SUB_TYPE TEXT DEFAULT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS "film" (
 	CONSTRAINT "CHECK_special_rating" CHECK("rating" IN ('G', 'PG', 'PG-13', 'R', 'NC-17'))
 );
 DROP TABLE IF EXISTS "film_actor";
-CREATE TABLE IF NOT EXISTS "film_actor" (
+CREATE TABLE  "film_actor" (
 	"actor_id"	INT NOT NULL,
 	"film_id"	INT NOT NULL,
 	"last_update"	TIMESTAMP NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS "film_actor" (
 	PRIMARY KEY("actor_id","film_id")
 );
 DROP TABLE IF EXISTS "film_category";
-CREATE TABLE IF NOT EXISTS "film_category" (
+CREATE TABLE  "film_category" (
 	"film_id"	INT NOT NULL,
 	"category_id"	SMALLINT NOT NULL,
 	"last_update"	TIMESTAMP NOT NULL,

@@ -11,15 +11,14 @@ bp = Blueprint('film', __name__)
 @bp.route('/')
 def index():
     db = get_db()
-    movie = db.execute(
-        'SELECT * FROM film ORDER BY film DESC'
+    movies = db.execute(
+        'SELECT * FROM film ORDER BY title ASC'
     ).fetchall()
-    return render_template('movies/index.html', movie=movie)
+    return render_template('movies/index.html', movies=movies)
 
 def get_movie(id):
     movie = get_db().execute(
-        'SELECT * FROM film',
-        (id,)
+        'SELECT * FROM film WHERE film_id == ?'(id),
     ).fetchone()
 
     return movie
