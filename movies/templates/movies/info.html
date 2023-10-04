@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>hola</h1>
+   {%for chau in languages%}
+    <h1>
+        {{chau['name']}}
+    </h1>
+   {%endfor%}
+{% endblock %}

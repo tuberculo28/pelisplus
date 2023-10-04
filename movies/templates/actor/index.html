@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Actores{% endblock %}</h1>
+
+{% endblock %}
+
+{% block content %}
+  
+  {% for hola in actors %}
+    <article class="pelis">
+      <header>
+        <div>
+          <h1>{{ hola['first_name'] }} {{ hola['last_name']}}</h1>
+ 
+        </div>
+
+      </header>
+ 
+    </article>
+
+      <hr>
+
+  {% endfor %}
+{% endblock %}

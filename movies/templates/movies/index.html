@@ -7,12 +7,14 @@
 
 {% block content %}
   
-  {% for hola in movies %}
+  {% for peli in movies %}
     <article class="pelis">
       <header>
         <div>
-          <h1>{{ hola['title'] }}</h1>
-        
+          
+          <a href="{{url_for('film.info', id=peli['film_id'])}}">
+          <h1>{{ peli['title'] }} - {{ peli['language']}}</h1>
+          </a>
         </div>
 
       </header>
