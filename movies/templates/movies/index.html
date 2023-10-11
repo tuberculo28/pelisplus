@@ -10,10 +10,10 @@
   {% for peli in movies %}
     <article class="pelis">
       <header>
-        <div>
+        <div class="peliculas">
           
           <a href="{{url_for('film.info', id=peli['film_id'])}}">
-          <h1>{{ peli['title'] }} - {{ peli['language']}}</h1>
+          <h2>{{ peli['title'] }} - {{ peli['language']}}</h2>
           </a>
         </div>
 

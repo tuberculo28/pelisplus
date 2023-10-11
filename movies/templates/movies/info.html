@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>hola</h1>
-   {%for chau in languages%}
-    <h1>
-        {{chau['name']}}
-    </h1>
-   {%endfor%}
+    <h2>Idioma: {{movie_language['idioma']}}</h2>
+    <h2>Categoria/s:{% for categoryname in movie_categories %}
+                    {{categoryname['categorias']}}
+    {%endfor%}</h2>
+    <p>Año de Estreno: {{movie_info['release_year']}}</p>
+    <h2>Actores:</h2>
+    {% for actorname in movie_actors %}
+        <p>{{actorname['nombre']}} {{actorname['apellido']}}</p>
+    {%endfor%}
+
 {% endblock %}

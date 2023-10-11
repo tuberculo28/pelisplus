@@ -20,17 +20,48 @@ def index():
 
 def get_movie(id):
     movie = get_db().execute(
-        'SELECT * FROM film WHERE film_id == ?'(id),
-    ).fetchone()
+        """SELECT f.film_id, f.release_year, a.first_name as nombre, a.last_name as apellido, c.name as categoria 
+                        FROM film f
+                             JOIN film_category fc ON f.film_id = fc.film_id
+                             JOIN category c ON fc.category_id = c.category_id
+                             JOIN film_actor fa ON f.film_id = fa.film_id
+                             JOIN actor a ON fa.actor_id = a.actor_id
+                             WHERE f.film_id = ?""",(id,)
+                             ).fetchone()
 
     return movie
 
+def get_actors(id):
+    actor = get_db().execute(
+        """SELECT f.film_id, a.first_name as nombre, a.last_name as apellido FROM film f
+        JOIN film_actor fa ON f.film_id = fa.film_id
+        JOIN actor a ON fa.actor_id = a.actor_id
+        WHERE f.film_id = ?""",(id,)
+    ).fetchall()
+    return actor
 
+def get_categorias(id):
+    categoria = get_db().execute(
+        """SELECT f.film_id, c. name as categorias FROM film f
+        JOIN film_category fc ON f.film_id = fc.film_id
+        JOIN category c ON fc.category_id = c.category_id
+        WHERE f.film_id = ?""",(id,)
+    ).fetchall()
+    return categoria 
+
+def get_idioma(id):
+    idioma = get_db().execute(
+        """SELECT f.film_id, l.name as idioma FROM film f
+        JOIN language l ON f.language_id = l.language_id
+        WHERE f.film_id = ?""",(id,)
+    ).fetchone()
+    return idioma
 
 @bp.route("/info/<int:id>/")
 def info(id):
-#     db = get_db()
-#     movie_info = db.execute("""SELECT f.film_id, f.title, l.name
-#                             f.rating, f.length, a.firts_name, a.last_name
-#                             FROM film f JOIN language l ON f.language_id = f.language_id """)
-     return str(id)
+    movie_info = get_movie(id)
+    movie_actors = get_actors(id)
+    movie_categories = get_categorias(id)
+    movie_language = get_idioma(id)
+    return render_template('movies/info.html', movie_info=movie_info, movie_actors=movie_actors,
+                           movie_categories=movie_categories, movie_language=movie_language)
