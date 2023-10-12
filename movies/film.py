@@ -17,6 +17,12 @@ def index():
             ORDER BY f.title ASC"""
     ).fetchall()
     return render_template('movies/index.html', movies=movies)
+def index_actor():
+    db = get_db()
+    actors = db.execute(
+        'SELECT * FROM actor ORDER BY last_name, first_name ASC'
+    ).fetchall()
+    return render_template('actor/index.html', actors=actors)
 
 def get_movie(id):
     movie = get_db().execute(
@@ -65,3 +71,23 @@ def info(id):
     movie_language = get_idioma(id)
     return render_template('movies/info.html', movie_info=movie_info, movie_actors=movie_actors,
                            movie_categories=movie_categories, movie_language=movie_language)
+
+@bp.route("/artists/<int:id>/")
+def artists(id):
+#    artist_info =  get_artists_info(id)
+    artist_movies = get_artists_movies(id)
+    return render_template('movies/artists.html',  
+                           artist_movies = artist_movies)
+
+#def get_artists_info(id):
+    artist = get_db().execute(
+        """SELECT actor_id, first_name, last_name FROM actor""",(id,)).fetchone()
+    return artist
+
+def get_artists_movies(id):
+    artistas_pelis = get_db().execute(
+        """SELECT a.actor_id, f.title, a.first_name, a.last_name FROM film f
+            JOIN film_actor fa ON f.film_id = fa.film_id
+            JOIN actor a ON fa.actor_id = a.actor_id
+            WHERE a.actor_id = ?""",(id,)).fetchone()
+    return artistas_pelis
