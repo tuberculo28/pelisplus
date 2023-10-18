@@ -4,7 +4,7 @@ from flask import (
 from werkzeug.exceptions import abort
 
 
-from flaskr.db import get_db
+from movies.db import get_db
 
 bp = Blueprint('actor', __name__, url_prefix="/actor/")
 

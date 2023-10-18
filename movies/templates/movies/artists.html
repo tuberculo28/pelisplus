@@ -6,5 +6,10 @@
 {% endblock %}
 
 {% block content %}
-
+  <p>Peliculas en las que aparece </p>
+  {% for cinta in artist_movies %}
+    <a href="{{url_for('film.info', id=cinta['film_id'])}}">
+      <p>{{cinta['peli']}}</p>
+    </a>
+  {% endfor %}
 {% endblock %}

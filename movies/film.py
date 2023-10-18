@@ -1,10 +1,10 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
+
 )
 from werkzeug.exceptions import abort
 
-
-from flaskr.db import get_db
+from movies.db import get_db
 
 bp = Blueprint('film', __name__)
 
@@ -39,7 +39,7 @@ def get_movie(id):
 
 def get_actors(id):
     actor = get_db().execute(
-        """SELECT f.film_id, a.first_name as nombre, a.last_name as apellido FROM film f
+        """SELECT a.actor_id, f.film_id, a.first_name as nombre, a.last_name as apellido FROM film f
         JOIN film_actor fa ON f.film_id = fa.film_id
         JOIN actor a ON fa.actor_id = a.actor_id
         WHERE f.film_id = ?""",(id,)
@@ -80,14 +80,25 @@ def artists(id):
                            artist_movies = artist_movies)
 
 #def get_artists_info(id):
-    artist = get_db().execute(
-        """SELECT actor_id, first_name, last_name FROM actor""",(id,)).fetchone()
-    return artist
+#    artist = get_db().execute(
+#        """SELECT actor_id, first_name, last_name FROM actor""",(id,)).fetchone()
+#    return artist
 
 def get_artists_movies(id):
     artistas_pelis = get_db().execute(
-        """SELECT a.actor_id, f.title, a.first_name, a.last_name FROM film f
+        """SELECT f.film_id,a.actor_id, f.title as peli, a.first_name, a.last_name FROM film f
             JOIN film_actor fa ON f.film_id = fa.film_id
             JOIN actor a ON fa.actor_id = a.actor_id
-            WHERE a.actor_id = ?""",(id,)).fetchone()
+            WHERE a.actor_id = ?""",(id,)).fetchall()
     return artistas_pelis
+
+@bp.route("/api/movies")
+def index_api():
+    db = get_db()
+    movies = db.execute(
+        """SELECT f.film_id, f.title, l.name AS language FROM film f 
+            JOIN language l ON l.language_id = f.language_id
+            ORDER BY f.title ASC"""
+    ).fetchall()
+    return jsonify(movies)
+

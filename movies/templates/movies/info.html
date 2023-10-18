@@ -8,9 +8,9 @@
     <p>Año de Estreno: {{movie_info['release_year']}}</p>
     <h2>Actores:</h2>
     {% for actorname in movie_actors %}
-        <a href="{{url_for('film.artists', id=actorname['actor_id'])}}">
-            <p>{{actorname['nombre']}} {{actorname['apellido']}}</p>
-        </a>
-    {%endfor%}
+    <a href="{{url_for('film.artists', id=actorname['actor_id'])}}">
+        <p>{{actorname['nombre']}} {{actorname['apellido']}}</p>
+    </a>
+{%endfor%}
 
 {% endblock %}
