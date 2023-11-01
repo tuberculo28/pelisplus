@@ -100,5 +100,21 @@ def index_api():
             JOIN language l ON l.language_id = f.language_id
             ORDER BY f.title ASC"""
     ).fetchall()
+
+    for m in movies:
+        m["url"] = url_for('film.info_api', id=m['film_id'], _external=True)
+
     return jsonify(movies)
 
+@bp.route("/api/info/<int:id>/")
+def info_api(id):
+    movie_info = get_movie(id)
+    movie_actors = get_actors(id)
+    movie_categories = get_categorias(id)
+    movie_language = get_idioma(id)
+
+    for i in movie_info:
+        i["url"] = url_for('film.get_artists_movies', id=i['actor_id'], _external=True)
+
+    return jsonify(movie_info=movie_info, movie_actors=movie_actors,
+                           movie_categories=movie_categories, movie_language=movie_language)
