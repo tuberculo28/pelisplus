@@ -35,8 +35,11 @@ def create_app(test_config=None):
 
     from . import film, actor, language
     app.register_blueprint(film.bp)
-    app.add_url_rule('/', endpoint='index')    
+    app.register_blueprint(film.bpapi)
+
+    app.add_url_rule('/', endpoint='film.index')    
     app.register_blueprint(actor.bp)
+    app.register_blueprint(actor.bpapi)
     app.register_blueprint(language.bp)
 
     return app

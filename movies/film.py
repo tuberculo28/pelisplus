@@ -6,7 +6,8 @@ from werkzeug.exceptions import abort
 
 from movies.db import get_db
 
-bp = Blueprint('film', __name__)
+bp = Blueprint('film', __name__, url_prefix="/film")
+bp = Blueprint('api_film', __name__, url_prefix="/api/film")
 
 @bp.route('/')
 def index():
@@ -95,16 +96,16 @@ def get_artists_movies(id):
 @bp.route("/api/movies")
 def index_api():
     db = get_db()
-    movies = db.execute(
+    moviesapi = db.execute(
         """SELECT f.film_id, f.title, l.name AS language FROM film f 
             JOIN language l ON l.language_id = f.language_id
             ORDER BY f.title ASC"""
     ).fetchall()
 
-    for m in movies:
+    for m in moviesapi:
         m["url"] = url_for('film.info_api', id=m['film_id'], _external=True)
 
-    return jsonify(movies)
+    return jsonify(moviesapi)
 
 @bp.route("/api/info/<int:id>/")
 def info_api(id):
@@ -112,9 +113,16 @@ def info_api(id):
     movie_actors = get_actors(id)
     movie_categories = get_categorias(id)
     movie_language = get_idioma(id)
+#    db = get_db()
+#    movie_infomation = db.execute(
+#        """SELECT a.actor_id, f.film_id, a.first_name as nombre, a.last_name as apellido FROM film f
+#        JOIN film_actor fa ON f.film_id = fa.film_id
+#        JOIN actor a ON fa.actor_id = a.actor_id
+#        WHERE f.film_id = ?""",(id,)
+#    ).fetchall()
 
-    for i in movie_info:
-        i["url"] = url_for('film.get_artists_movies', id=i['actor_id'], _external=True)
+    for i in movie_actors:
+        i["url"] = url_for('film.', id=i['actor_id'], _external=True)
 
     return jsonify(movie_info=movie_info, movie_actors=movie_actors,
                            movie_categories=movie_categories, movie_language=movie_language)
