@@ -7,7 +7,7 @@ from werkzeug.exceptions import abort
 from movies.db import get_db
 
 bp = Blueprint('film', __name__, url_prefix="/film")
-bp = Blueprint('api_film', __name__, url_prefix="/api/film")
+bpapi = Blueprint('api_film', __name__, url_prefix="/api/film")
 
 @bp.route('/')
 def index():
@@ -93,7 +93,7 @@ def get_artists_movies(id):
             WHERE a.actor_id = ?""",(id,)).fetchall()
     return artistas_pelis
 
-@bp.route("/api/movies")
+@bpapi.route("/")
 def index_api():
     db = get_db()
     moviesapi = db.execute(
@@ -103,26 +103,36 @@ def index_api():
     ).fetchall()
 
     for m in moviesapi:
-        m["url"] = url_for('film.info_api', id=m['film_id'], _external=True)
+        m["url"] = url_for('api_film.info_api', id=m['film_id'], _external=True)
 
     return jsonify(moviesapi)
 
-@bp.route("/api/info/<int:id>/")
+@bpapi.route("/<int:id>/")
 def info_api(id):
     movie_info = get_movie(id)
     movie_actors = get_actors(id)
     movie_categories = get_categorias(id)
     movie_language = get_idioma(id)
-#    db = get_db()
-#    movie_infomation = db.execute(
-#        """SELECT a.actor_id, f.film_id, a.first_name as nombre, a.last_name as apellido FROM film f
-#        JOIN film_actor fa ON f.film_id = fa.film_id
-#        JOIN actor a ON fa.actor_id = a.actor_id
-#        WHERE f.film_id = ?""",(id,)
-#    ).fetchall()
+    artists_movie = get_artists_movies(id)
+    db = get_db()
+    movie_infomation = db.execute(
+        """SELECT a.actor_id, f.film_id, a.first_name as nombre, a.last_name as apellido FROM film f
+        JOIN film_actor fa ON f.film_id = fa.film_id
+        JOIN actor a ON fa.actor_id = a.actor_id
+        WHERE f.film_id = ?""",(id,)
+    ).fetchall()
 
     for i in movie_actors:
-        i["url"] = url_for('film.', id=i['actor_id'], _external=True)
+        i["url"] = url_for('api_film.artists', id=i['actor_id'], _external=True)
 
     return jsonify(movie_info=movie_info, movie_actors=movie_actors,
                            movie_categories=movie_categories, movie_language=movie_language)
+
+@bpapi.route("/artists/<int:id>/")
+def artists(id):
+    movie_artists = get_artists_movies(id)
+
+    for a in movie_artists:
+        a["url"] = url_for("api_film.info_api",id=a['actor_id'], _external=True)
+
+    return jsonify(movie_artists = movie_artists)
